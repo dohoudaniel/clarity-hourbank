@@ -6,6 +6,7 @@
 (define-constant ERR_UNAUTHORIZED (err u500))
 (define-constant ERR_INSUFFICIENT_BALANCE (err u501))
 (define-constant ERR_INVALID_AMOUNT (err u502))
+(define-constant ERR_INVALID_PRINCIPAL (err u503))
 
 ;; Token metadata
 (define-constant TOKEN_NAME "Time Credits")
@@ -20,11 +21,25 @@
 ;; Contract owner for minting
 (define-data-var contract-owner principal tx-sender)
 
+;; Input validation helpers
+(define-private (is-valid-amount (amount uint))
+  (> amount u0))
+
+(define-private (is-valid-principal (principal principal))
+  (not (is-eq principal 'SP000000000000000000002Q6VF78)))
+
 ;; SIP-010 Functions
 (define-public (transfer (amount uint) (sender principal) (recipient principal) (memo (optional (buff 34))))
-  (if (is-eq tx-sender sender)
-    (transfer-helper amount sender recipient)
-    ERR_UNAUTHORIZED))
+  (begin
+    ;; Validate inputs
+    (asserts! (is-valid-amount amount) ERR_INVALID_AMOUNT)
+    (asserts! (is-valid-principal sender) ERR_INVALID_PRINCIPAL)
+    (asserts! (is-valid-principal recipient) ERR_INVALID_PRINCIPAL)
+    (asserts! (not (is-eq sender recipient)) ERR_INVALID_PRINCIPAL)
+
+    (if (is-eq tx-sender sender)
+      (transfer-helper amount sender recipient)
+      ERR_UNAUTHORIZED)))
 
 (define-private (transfer-helper (amount uint) (sender principal) (recipient principal))
   (let ((sender-balance (default-to u0 (map-get? balances sender))))
@@ -55,9 +70,14 @@
 
 ;; Mint tokens (owner only)
 (define-public (mint (amount uint) (recipient principal))
-  (if (is-eq tx-sender (var-get contract-owner))
-    (begin
-      (map-set balances recipient (+ (default-to u0 (map-get? balances recipient)) amount))
-      (var-set total-supply (+ (var-get total-supply) amount))
-      (ok true))
-    ERR_UNAUTHORIZED))
+  (begin
+    ;; Validate inputs
+    (asserts! (is-valid-amount amount) ERR_INVALID_AMOUNT)
+    (asserts! (is-valid-principal recipient) ERR_INVALID_PRINCIPAL)
+
+    (if (is-eq tx-sender (var-get contract-owner))
+      (begin
+        (map-set balances recipient (+ (default-to u0 (map-get? balances recipient)) amount))
+        (var-set total-supply (+ (var-get total-supply) amount))
+        (ok true))
+      ERR_UNAUTHORIZED)))

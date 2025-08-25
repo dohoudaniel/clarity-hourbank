@@ -4,6 +4,7 @@
 (define-constant ERR_UNAUTHORIZED (err u600))
 (define-constant ERR_USER_NOT_FOUND (err u601))
 (define-constant ERR_INVALID_RATING (err u602))
+(define-constant ERR_INVALID_INPUT (err u603))
 
 ;; Reputation data
 (define-map reputation principal {
@@ -19,9 +20,28 @@
   created-at: uint
 })
 
+;; Input validation helpers
+(define-private (is-valid-principal (principal principal))
+  (not (is-eq principal 'SP000000000000000000002Q6VF78)))
+
+(define-private (is-valid-booking-id (booking-id uint))
+  (> booking-id u0))
+
+(define-private (is-valid-score (score uint))
+  (and (>= score u1) (<= score u5)))
+
+(define-private (is-valid-comment (comment (string-ascii 256)))
+  (> (len comment) u0))
+
 ;; Add a rating (1-5 scale)
 (define-public (add-rating (rated principal) (booking-id uint) (score uint) (comment (string-ascii 256)))
-  (if (and (>= score u1) (<= score u5))
+  (begin
+    ;; Validate inputs
+    (asserts! (is-valid-principal rated) ERR_INVALID_INPUT)
+    (asserts! (is-valid-booking-id booking-id) ERR_INVALID_INPUT)
+    (asserts! (is-valid-score score) ERR_INVALID_RATING)
+    (asserts! (is-valid-comment comment) ERR_INVALID_INPUT)
+
     (let ((current-rep (default-to { total-score: u0, total-ratings: u0, average-rating: u0 } (map-get? reputation rated))))
       (begin
         ;; Store individual rating
@@ -38,8 +58,7 @@
             total-ratings: new-total-ratings,
             average-rating: (/ new-total-score new-total-ratings)
           }))
-        (ok true)))
-    ERR_INVALID_RATING))
+        (ok true)))))
 
 ;; Get user reputation
 (define-read-only (get-reputation (user principal))
