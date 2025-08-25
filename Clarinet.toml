@@ -5,6 +5,11 @@ authors = []
 telemetry = true
 cache_dir = './.cache'
 requirements = []
+[contracts.sip010-trait]
+path = 'contracts/sip010-trait.clar'
+clarity_version = 3
+epoch = 3.1
+
 [contracts.booking-manager]
 path = 'contracts/booking-manager.clar'
 clarity_version = 3

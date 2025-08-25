@@ -1,8 +1,6 @@
 ;; Booking Manager Contract
 ;; Handles booking creation, acceptance, and status management
 
-(use-trait user-registry-trait .user-registry.user-registry-trait)
-
 (define-constant ERR_UNAUTHORIZED (err u300))
 (define-constant ERR_BOOKING_NOT_FOUND (err u301))
 (define-constant ERR_INVALID_STATUS (err u302))
@@ -43,7 +41,7 @@
           hours: hours,
           total-credits: total-credits,
           status: STATUS_PENDING,
-          created-at: block-height,
+          created-at: stacks-block-height,
           accepted-at: none,
           delivered-at: none
         })
@@ -59,7 +57,7 @@
         (begin
           (map-set bookings booking-id (merge booking-data {
             status: STATUS_ACCEPTED,
-            accepted-at: (some block-height)
+            accepted-at: (some stacks-block-height)
           }))
           (ok true))
         ERR_UNAUTHORIZED)
@@ -74,7 +72,7 @@
         (begin
           (map-set bookings booking-id (merge booking-data {
             status: STATUS_DELIVERED,
-            delivered-at: (some block-height)
+            delivered-at: (some stacks-block-height)
           }))
           (ok true))
         ERR_UNAUTHORIZED)

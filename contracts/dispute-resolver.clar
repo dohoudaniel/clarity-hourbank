@@ -36,7 +36,7 @@
       reason: reason,
       outcome: OUTCOME_PENDING,
       arbitrator: none,
-      created-at: block-height,
+      created-at: stacks-block-height,
       resolved-at: none
     })
     (var-set next-dispute-id (+ dispute-id u1))
@@ -51,7 +51,7 @@
           (map-set disputes dispute-id (merge dispute-data {
             outcome: outcome,
             arbitrator: (some tx-sender),
-            resolved-at: (some block-height)
+            resolved-at: (some stacks-block-height)
           }))
           (ok true))
         ERR_DISPUTE_NOT_FOUND)

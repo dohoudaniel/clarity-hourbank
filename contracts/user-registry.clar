@@ -26,7 +26,7 @@
           name: name,
           bio: bio,
           verified: false,
-          created-at: block-height
+          created-at: stacks-block-height
         })
         (ok true)))))
 

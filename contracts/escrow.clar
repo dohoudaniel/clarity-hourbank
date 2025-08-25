@@ -1,7 +1,7 @@
 ;; Escrow Contract
 ;; Manages time credit deposits and releases for bookings
 
-(use-trait token-trait .time-credit-token.sip010-trait)
+(use-trait token-trait .sip010-trait.sip010-trait)
 
 (define-constant ERR_UNAUTHORIZED (err u400))
 (define-constant ERR_INSUFFICIENT_BALANCE (err u401))
@@ -32,7 +32,7 @@
             provider: provider,
             amount: amount,
             released: false,
-            created-at: block-height
+            created-at: stacks-block-height
           })
           (var-set next-escrow-id (+ escrow-id u1))
           (ok escrow-id))

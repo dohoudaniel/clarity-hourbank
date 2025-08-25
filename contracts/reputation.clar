@@ -28,7 +28,7 @@
         (map-set ratings { rater: tx-sender, rated: rated, booking-id: booking-id } {
           score: score,
           comment: comment,
-          created-at: block-height
+          created-at: stacks-block-height
         })
         ;; Update aggregate reputation
         (let ((new-total-score (+ (get total-score current-rep) score))

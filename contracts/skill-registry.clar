@@ -41,7 +41,7 @@
       (map-set provider-skills { provider: tx-sender, skill-id: skill-id } {
         hourly-rate: hourly-rate,
         available: true,
-        created-at: block-height
+        created-at: stacks-block-height
       })
       (ok true))
     ERR_SKILL_NOT_FOUND))
