@@ -1,0 +1,54 @@
+[project]
+name = 'clarity-hourbank'
+description = ''
+authors = []
+telemetry = true
+cache_dir = './.cache'
+requirements = []
+[contracts.sip010-trait]
+path = 'contracts/sip010-trait.clar'
+clarity_version = 3
+epoch = 3.1
+
+[contracts.booking-manager]
+path = 'contracts/booking-manager.clar'
+clarity_version = 3
+epoch = 3.1
+
+[contracts.dispute-resolver]
+path = 'contracts/dispute-resolver.clar'
+clarity_version = 3
+epoch = 3.1
+
+[contracts.escrow]
+path = 'contracts/escrow.clar'
+clarity_version = 3
+epoch = 3.1
+
+[contracts.reputation]
+path = 'contracts/reputation.clar'
+clarity_version = 3
+epoch = 3.1
+
+[contracts.skill-registry]
+path = 'contracts/skill-registry.clar'
+clarity_version = 3
+epoch = 3.1
+
+[contracts.time-token]
+path = 'contracts/time-token.clar'
+clarity_version = 3
+epoch = 3.1
+
+[contracts.user-registry]
+path = 'contracts/user-registry.clar'
+clarity_version = 3
+epoch = 3.1
+[repl.analysis]
+passes = ['check_checker']
+
+[repl.analysis.check_checker]
+strict = false
+trusted_sender = false
+trusted_caller = false
+callee_filter = false
